@@ -1,0 +1,13 @@
+services:
+  filebrowser:
+    image: C:\Users\liska\Desktop\maturitni_projekt\maturitni_projekt-main\maturitni_projekt-main\utulek
+    user: "1000:1000"
+    ports:
+      - "6443:8080"
+    volumes: 
+      - C:\Users\liska\Desktop\maturitni_projekt\maturitni_projekt-main\maturitni_projekt-main\utulek\__pycache__
+      - C:\Users\liska\Desktop\maturitni_projekt\maturitni_projekt-main\maturitni_projekt-main\utulek\app
+      - C:\Users\liska\Desktop\maturitni_projekt\maturitni_projekt-main\maturitni_projekt-main\utulek\babel
+      - C:\Users\liska\Desktop\maturitni_projekt\maturitni_projekt-main\maturitni_projekt-main\utulek\venv
+  redis:
+    image: redis
