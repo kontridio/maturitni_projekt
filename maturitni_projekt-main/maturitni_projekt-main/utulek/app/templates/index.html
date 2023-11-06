@@ -1,31 +1,39 @@
-{% extends 'base.html' %}
-
-
-{% block title %}
-Sock Market
-{% endblock %}
-
-
-{% block content %}
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
-
-      <h1 class="pt-5 pb-2">Welcome to the Sock Market!</h1>
-
-      <p class="lead">This is the index page for an example Flask app using a SQL database containing an inventory of many colorful socks.</p>
-
-      <p>Select the style of sock you would like to see:</p>
-
-      <ul>
-          {% for s in styles %}
-          <li><a href="{{ url_for( 'inventory', style=s.style ) }}">{{ s.style }}</a></li>
-          {% endfor %}
-      </ul>
-
-    </div>
-  </div>
-</div>
-
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+</head>
+<body>
+    <h1>User List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for utulek_pes in pes %}
+                <tr>
+                    <td>{{ utulek_pes.id }}</td>
+                    <td>{{ utulek_pes.jmeno_psa }}</td>
+                    <td>{{ utulek_pes.rasa }}</td>
+                    <td>{{ utulek_pes.popis }}</td>
+                    <td>{{ utulek_pes.utule_nazev_id }}</td>
+                    <td>
+                        {% if utulek_pes.base64_image %}
+                            <img src="data:image/jpeg;base64,{{ utulek_pes.base64_image }}" alt="Dog Image">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>{{ utulek_pes.vek }}</td>
+                    <td>{{ utulek_pes.ockovani }}</td>
+                    <td>{{ utulek_pes.pohlavi }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -2,7 +2,6 @@ from flask import render_template
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder import ModelView, ModelRestApi
 
-from flask import Blueprint
 
 from . import appbuilder, db
 
