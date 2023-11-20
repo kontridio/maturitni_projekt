@@ -1,39 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>User List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pes List</title>
 </head>
 <body>
-    <h1>User List</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for utulek_pes in pes %}
-                <tr>
-                    <td>{{ utulek_pes.id }}</td>
-                    <td>{{ utulek_pes.jmeno_psa }}</td>
-                    <td>{{ utulek_pes.rasa }}</td>
-                    <td>{{ utulek_pes.popis }}</td>
-                    <td>{{ utulek_pes.utule_nazev_id }}</td>
-                    <td>
-                        {% if utulek_pes.base64_image %}
-                            <img src="data:image/jpeg;base64,{{ utulek_pes.base64_image }}" alt="Dog Image">
-                        {% else %}
-                            No Image
-                        {% endif %}
-                    </td>
-                    <td>{{ utulek_pes.vek }}</td>
-                    <td>{{ utulek_pes.ockovani }}</td>
-                    <td>{{ utulek_pes.pohlavi }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+<h1>List of Dogs</h1>
+
+{% for Pes in pes_records %}
+    <div>
+        <h2>{{ Pes.jmeno }}</h2>
+        <p>Rasa: {{ Pes.rasa }}</p>
+        <p>Vek: {{ Pes.vek }}</p>
+        <p>Ockovani: {{ Pes.ockovani }}</p>
+        <p>Pohlavi: {{ Pes.pohlavi }}</p>
+        <p>Velikost: {{ Pes.velikost }}</p>
+        <p>Stav: {{ Pes.stav }}</p>
+        <p>Utulek: {{ Pes.utulek_nazev }}</p>
+        <p>Popis: {{ Pes.popis }}</p>
+
+        {% if Pes.fotografie %}
+            <img src="data:image/jpeg;base64,{{ Pes.fotografie|b64encode }}" alt="{{ Pes.jmeno }} Image">
+        {% else %}
+            <p>No Image Available</p>
+        {% endif %}
+    </div>
+    <hr>
+{% endfor %}
+
 </body>
 </html>

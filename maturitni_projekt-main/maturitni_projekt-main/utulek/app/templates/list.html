@@ -1,44 +1,46 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-{% block title %}
-Sock Style List
-{% endblock %}
-
-
-{% block content %}
-
-<div class="container">
-  <div class="row pb-5">
-    <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
-
-      <h1 class="pt-5 pb-2">List of Socks</h1>
-
-      <p class="lead alert alert-warning">This is a list of all the socks of the
-			<strong>{{ style }}</strong> style in our inventory.</p>
-
-	  <p class="ml-4"><a href="{{ url_for('index') }}">Return to the index.</a></p>
-
-		<table class="table">
-			<tr>
-				<th>Sock Name</th>
-				<th>Color</th>
-				<th>Price</th>
-				<th>Quantity</th>
-				<th>Updated</th>
-			</tr>
-
-			<!-- here is a for-loop to give us all the socks -->
-			{% for sock in socks %}
-			<tr>
-				<td>{{ utulek.kraj }}</td>
-				<td>{{ utulek.nazev_mesta }}</td>
-			</tr>
-			{% endfor %}
-		</table>
-
-		</div>
-	</div>
-</div>
-
-{% endblock %}
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>City List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Region</th>
+                <th>City Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mesto in mesto %}
+                <tr>
+                    <td>{{ mesto.id }}</td>
+                    <td>{{ mesto.kraj }}</td>
+                    <td>{{ mesto.nazev_mesta }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

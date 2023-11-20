@@ -14,7 +14,7 @@ class utulek_mesto(db.Model):
     kraj = db.Column(db.String(80), unique=True, nullable=False)
     nazev_mesta = db.Column(db.String(120), unique=True, nullable=False)
 
-@app.route('/')
+@app.route('/pes')
 def get_mesto():
     mesto = utulek_mesto.query.all()
     return render_template('templates\index.html', mesto=mesto)
