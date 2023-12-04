@@ -1,0 +1,109 @@
+-- SQLite3 Equivalent
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+PRAGMA foreign_keys=off;
+
+-- Drop existing tables
+DROP TABLE IF EXISTS mesto;
+DROP TABLE IF EXISTS utulek;
+DROP TABLE IF EXISTS osetrovatel;
+DROP TABLE IF EXISTS pes;
+DROP TABLE IF EXISTS navsteva;
+DROP TABLE IF EXISTS zajemce;
+DROP TABLE IF EXISTS pes_has_zajemce;
+
+PRAGMA foreign_keys=on;
+
+-- -----------------------------------------------------
+-- Table mydb.mesto
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS mesto (
+  idmesto INTEGER PRIMARY KEY,
+  nazev VARCHAR(45) NOT NULL,
+  kraj VARCHAR(45) NOT NULL,
+  psc INTEGER NOT NULL
+);
+
+-- -----------------------------------------------------
+-- Table mydb.utulek
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS utulek (
+  idutulek INTEGER PRIMARY KEY,
+  nazev VARCHAR(45) NOT NULL,
+  adresa VARCHAR(45) NOT NULL,
+  mesto_nazev VARCHAR(45) NOT NULL,
+  FOREIGN KEY (mesto_nazev) REFERENCES mesto(nazev) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- -----------------------------------------------------
+-- Table mydb.osetrovatel
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS osetrovatel (
+  idosetrovatel INTEGER PRIMARY KEY,
+  jmeno VARCHAR(45) NOT NULL,
+  prijmeni VARCHAR(45) NOT NULL,
+  mobil INTEGER NOT NULL,
+  utulek_nazev VARCHAR(45) NOT NULL,
+  FOREIGN KEY (utulek_nazev) REFERENCES utulek(nazev) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- -----------------------------------------------------
+-- Table mydb.pes
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS pes (
+  idpes INTEGER PRIMARY KEY,
+  ockovani TEXT CHECK(ockovani IN ('Ano', 'Ne')),
+  jmeno VARCHAR(45) NOT NULL,
+  rasa VARCHAR(45),
+  vek TEXT CHECK(vek IN ('2 - 6 měs', '6 měs - 2 roky', '2 - 8 let', '8 a více')),
+  velikost TEXT CHECK(velikost IN ('maly', 'stredni', 'velky')),
+  stav TEXT CHECK(stav IN ('kastrovany', 'handicapovany', 'akutni adoptce')),
+  pohlavi TEXT CHECK(pohlavi IN ('Pes', 'Fena')),
+  popis VARCHAR(200),
+  fotografie BLOB,
+  utulek_nazev VARCHAR(45) NOT NULL,
+  FOREIGN KEY (utulek_nazev) REFERENCES utulek(nazev) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- -----------------------------------------------------
+-- Table mydb.navsteva
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS navsteva (
+  idnavsteva INTEGER PRIMARY KEY,
+  jmeno VARCHAR(45) NOT NULL,
+  prijmeni VARCHAR(45) NOT NULL,
+  email VARCHAR(45) NOT NULL,
+  mobil INTEGER,
+  datum DATETIME NOT NULL,
+  utulek_nazev VARCHAR(45) NOT NULL,
+  FOREIGN KEY (utulek_nazev) REFERENCES utulek(nazev) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- -----------------------------------------------------
+-- Table mydb.zajemce
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS zajemce (
+  idzajemce INTEGER PRIMARY KEY,
+  jmeno VARCHAR(45) NOT NULL,
+  prijmeni VARCHAR(45) NOT NULL,
+  mobil INTEGER,
+  email VARCHAR(45) NOT NULL,
+  mesto_nazev VARCHAR(45) NOT NULL,
+  FOREIGN KEY (mesto_nazev) REFERENCES mesto(nazev) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+-- -----------------------------------------------------
+-- Table mydb.pes_has_zajemce
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS pes_has_zajemce (
+  zajemce_idzajemce INTEGER NOT NULL,
+  zajemce_email VARCHAR(45) NOT NULL,
+  pes_idpes INTEGER NOT NULL,
+  pes_utulek_nazev VARCHAR(45) NOT NULL,
+  pes_utulek_mesto_nazev VARCHAR(50) NOT NULL,
+  PRIMARY KEY (zajemce_idzajemce, zajemce_email, pes_idpes, pes_utulek_nazev, pes_utulek_mesto_nazev),
+  FOREIGN KEY (zajemce_idzajemce, zajemce_email) REFERENCES zajemce(idzajemce, email) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY (pes_idpes, pes_utulek_nazev, pes_utulek_mesto_nazev) REFERENCES pes(idpes, utulek_nazev) ON DELETE NO ACTION ON UPDATE NO ACTION
+);

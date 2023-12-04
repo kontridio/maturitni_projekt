@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Dog</title>
+</head>
+<body>
+
+<h1>Add a Dog</h1>
+
+<form action="{{ url_for('add_pes') }}" method="post">
+    <label for="ockovani">Ockovani:</label>
+    <select name="ockovani" id="ockovani">
+        <option value="Ano">Ano</option>
+        <option value="Ne">Ne</option>
+    </select><br>
+
+    <label for="jmeno">Jmeno:</label>
+    <input type="text" name="jmeno" id="jmeno" required><br>
+
+    <label for="rasa">Rasa:</label>
+    <input type="text" name="rasa" id="rasa"><br>
+
+    <label for="vek">Vek:</label>
+    <select name="vek" id="vek">
+        <option value="2 - 6 měs">2 - 6 měs</option>
+        <option value="6 měs - 2 roky">6 měs - 2 roky</option>
+        <option value="2 - 8 let">2 - 8 let</option>
+        <option value="8 a více">8 a více</option>
+    </select><br>
+
+    <label for="velikost">Velikost:</label>
+    <select name="velikost" id="velikost">
+        <option value="maly">Maly</option>
+        <option value="stredni">Stredni</option>
+        <option value="velky">Velky</option>
+    </select><br>
+
+    <label for="stav">Stav:</label>
+    <select name="stav" id="stav" multiple>
+        <option value="kastrovany">Kastrovany</option>
+        <option value="handicapovany">Handicapovany</option>
+        <option value="akutni adoptce">Akutni adoptce</option>
+    </select><br>
+
+    <label for="pohlavi">Pohlavi:</label>
+    <select name="pohlavi" id="pohlavi">
+        <option value="Pes">Pes</option>
+        <option value="Fena">Fena</option>
+    </select><br>
+
+    <label for="popis">Popis:</label>
+    <textarea name="popis" id="popis" rows="4" cols="50"></textarea><br>
+
+    <label for="utulek_nazev">Utulek Nazev:</label>
+    <input type="text" name="utulek_nazev" id="utulek_nazev" required><br>
+
+    <input type="submit" value="Add Dog">
+</form>
+
+</body>
+</html>

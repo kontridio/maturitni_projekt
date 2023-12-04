@@ -6,29 +6,40 @@
     <title>Pes List</title>
 </head>
 <body>
-
-<h1>List of Dogs</h1>
-
-{% for Pes in pes_records %}
-    <div>
-        <h2>{{ Pes.jmeno }}</h2>
-        <p>Rasa: {{ Pes.rasa }}</p>
-        <p>Vek: {{ Pes.vek }}</p>
-        <p>Ockovani: {{ Pes.ockovani }}</p>
-        <p>Pohlavi: {{ Pes.pohlavi }}</p>
-        <p>Velikost: {{ Pes.velikost }}</p>
-        <p>Stav: {{ Pes.stav }}</p>
-        <p>Utulek: {{ Pes.utulek_nazev }}</p>
-        <p>Popis: {{ Pes.popis }}</p>
-
-        {% if Pes.fotografie %}
-            <img src="data:image/jpeg;base64,{{ Pes.fotografie|b64encode }}" alt="{{ Pes.jmeno }} Image">
-        {% else %}
-            <p>No Image Available</p>
-        {% endif %}
-    </div>
-    <hr>
-{% endfor %}
-
+    <h1>Pes List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ockovani</th>
+                <th>Jmeno</th>
+                <th>Rasa</th>
+                <th>Vek</th>
+                <th>Velikost</th>
+                <th>Stav</th>
+                <th>Pohlavi</th>
+                <th>Popis</th>
+                <th>Utulek Nazev</th>
+                <!-- Add more columns as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for pes in pes_entries %}
+                <tr>
+                    <td>{{ pes.idpes }}</td>
+                    <td>{{ pes.ockovani }}</td>
+                    <td>{{ pes.jmeno }}</td>
+                    <td>{{ pes.rasa }}</td>
+                    <td>{{ pes.vek }}</td>
+                    <td>{{ pes.velikost }}</td>
+                    <td>{{ pes.stav }}</td>
+                    <td>{{ pes.pohlavi }}</td>
+                    <td>{{ pes.popis }}</td>
+                    <td>{{ pes.utulek_nazev }}</td>
+                    <!-- Add more columns as needed -->
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
