@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Pes</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Pes</h1>
+        <form method="post" action="{{ url_for('edit_pes', id=pes.idpes) }}">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><label for="ockovani">Očkování:</label></td>
+                        <td>
+                            <select class="form-control" name="ockovani">
+                                <option value="Ano" {% if pes.ockovani == 'Ano' %}selected{% endif %}>Ano</option>
+                                <option value="Ne" {% if pes.ockovani == 'Ne' %}selected{% endif %}>Ne</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="jmeno">Jméno:</label></td>
+                        <td><input class="form-control" type="text" name="jmeno" value="{{ pes.jmeno }}" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="rasa">Rasa:</label></td>
+                        <td><input class="form-control" type="text" name="rasa" value="{{ pes.rasa }}" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="vek">Věk:</label></td>
+                        <td>
+                            <select class="form-control" name="vek">
+                                <option value="2 - 6 měs" {% if pes.vek == '2 - 6 měs' %}selected{% endif %}>2 - 6 měsíců</option>
+                                <option value="6 měs - 2 roky" {% if pes.vek == '6 měs - 2 roky' %}selected{% endif %}>6 měsíců - 2 roky</option>
+                                <option value="2 - 8 let" {% if pes.vek == '2 - 8 let' %}selected{% endif %}>2 - 8 let</option>
+                                <option value="8 a více" {% if pes.vek == '8 a více' %}selected{% endif %}>8 a více let</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="velikost">Velikost:</label></td>
+                        <td>
+                            <select class="form-control" name="velikost">
+                                <option value="maly" {% if pes.velikost == 'maly' %}selected{% endif %}>Malý</option>
+                                <option value="stredni" {% if pes.velikost == 'stredni' %}selected{% endif %}>Střední</option>
+                                <option value="velky" {% if pes.velikost == 'velky' %}selected{% endif %}>Velký</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="stav">Stav:</label></td>
+                        <td>
+                            <select class="form-control" name="stav" multiple>
+                                <option value="kastrovany" {% if 'kastrovany' in pes.stav %}selected{% endif %}>Kastrován</option>
+                                <option value="handicapovany" {% if 'handicapovany' in pes.stav %}selected{% endif %}>Handicapovaný</option>
+                                <option value="akutni adoptce" {% if 'akutni adoptce' in pes.stav %}selected{% endif %}>Akutní adopce</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="pohlavi">Pohlaví:</label></td>
+                        <td>
+                            <select class="form-control" name="pohlavi">
+                                <option value="Pes" {% if pes.pohlavi == 'Pes' %}selected{% endif %}>Pes</option>
+                                <option value="Fena" {% if pes.pohlavi == 'Fena' %}selected{% endif %}>Fena</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="popis">Popis:</label></td>
+                        <td><textarea class="form-control" name="popis" rows="4">{{ pes.popis }}</textarea></td>
+                    </tr>
+                    <tr>
+                        <td><label for="utulek_nazev">Název útulku:</label></td>
+                        <td><input class="form-control" type="text" name="utulek_nazev" value="{{ pes.utulek_nazev }}" required></td>
+                    </tr>
+                    <tr>
+                        <td><label for="fotografie">Fotografie:</label></td>
+                        <td><input class="form-control" type="file" name="fotografie" accept="image/*"></td>
+                    </tr>
+                    <!-- Add rows for other fields -->
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+        </form>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

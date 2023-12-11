@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utulky</title>
+</head>
+<body>
+    <h1>List of Utulky</h1>
+    <ul>
+        {% for utulek in utulky_entries %}
+            <li>{{ utulek.nazev }} - {{ utulek.adresa }} - {{ utulek.mesto_nazev }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

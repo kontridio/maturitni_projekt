@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesta</title>
+</head>
+<body>
+    <h1>List of Mesta</h1>
+    <ul>
+        {% for mesto in mesta_entries %}
+            <li>{{ mesto.nazev }} - {{ mesto.kraj }} - {{ mesto.psc }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
