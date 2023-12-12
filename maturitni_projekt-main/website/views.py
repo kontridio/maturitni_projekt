@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, current_app, request
 import os
 from website import app, db
+from website.forms import AddPesForm
 from website.models import Mesto, Utulek, Pes
 from werkzeug.utils import secure_filename
 
@@ -40,17 +41,19 @@ def show_pes():
 
 @app.route('/pes/add/', methods=['GET', 'POST'])
 def add_pes():
-    if request.method == 'POST':
-        ockovani = request.form['ockovani']
-        jmeno = request.form['jmeno']
-        rasa = request.form['rasa']
-        vek = request.form['vek']
-        velikost = request.form['velikost']
-        stav = request.form['stav']  # Use getlist to handle multiple selections
-        pohlavi = request.form['pohlavi']
-        popis = request.form['popis']
-        #fotografie = request.form['fotografie']
-        utulek_nazev = request.form['utulek_nazev']
+    form = AddPesForm()
+
+    if request.method == 'POST' and form.validate_on_submit():
+        ockovani = form.ockovani.data
+        jmeno = form.jmeno.data
+        rasa = form.rasa.data
+        vek = form.vek.data
+        velikost = form.velikost.data
+        stav = form.stav.data
+        pohlavi = form.pohlavi.data
+        popis = form.popis.data
+        utulek_nazev = form.utulek_nazev.data
+
         fotografie = None
 
         # Handle image upload
@@ -71,8 +74,9 @@ def add_pes():
         flash('Pes byl přidán.', 'success')
 
         return redirect(url_for('show_pes'))  # Redirect to the page showing all dogs
+    
+    return render_template('add_pes.html', form = form)
 
-    return render_template('add_pes.html')
 
 @app.route('/pes/delete/<int:id>', methods=['GET', 'POST'])
 def delete_pes(id):
