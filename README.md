@@ -10,3 +10,5 @@ https://stackoverflow.com/questions/72579189/how-can-i-render-images-i-got-from-
 XAMPP connection:
 https://www.askpython.com/python-modules/flask/flask-mysql-database
 
+
+https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iii-web-forms
