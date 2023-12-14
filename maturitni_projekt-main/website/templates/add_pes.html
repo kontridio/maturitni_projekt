@@ -19,7 +19,7 @@
         {{ form.pohlavi.label }} {{ form.pohlavi }}
         {{ form.popis.label }} {{ form.popis }}
         {{ form.utulek_nazev.label }} {{ form.utulek_nazev }}
-        {{ form.fotografie.label }} {{ form.fotografie }}
+        {{ form.fotografie.label() }} {{ form.fotografie }}
         {{ form.submit() }}
     </form>
     {% if form.jmeno.errors %}

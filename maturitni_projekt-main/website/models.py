@@ -31,7 +31,7 @@ class Pes(db.Model):
     stav = db.Column(db.Enum('kastrovany', 'handicapovany', 'akutni adoptce', name='stav_enum'), nullable=True)
     pohlavi = db.Column(db.Enum('Pes', 'Fena', name='pohlavi_enum'), nullable=True)
     popis = db.Column(db.String(200))
-    fotografie = db.Column(db.String(100))
+    fotografie = db.Column(db.String(100), nullable=False, default='default.jpeg') 
     utulek_nazev = db.Column(db.String(45), nullable=False)
 
     __table_args__ = (

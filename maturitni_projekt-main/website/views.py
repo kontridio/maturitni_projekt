@@ -1,5 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, current_app, request
 import os
+import secrets
+from PIL import Image
 from website import app, db
 from website.forms import AddPesForm
 from website.models import Mesto, Utulek, Pes
@@ -39,6 +41,17 @@ def show_pes():
     pes_entries = Pes.query.all()
     return render_template('pes.html', pes_entries=pes_entries)
 
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/img', picture_fn)
+
+    output_size = (125, 125)
+    form_picture.save(picture_path)
+
+    return picture_fn
+
 @app.route('/pes/add/', methods=['GET', 'POST'])
 def add_pes():
     form = AddPesForm()
@@ -54,19 +67,17 @@ def add_pes():
         popis = form.popis.data
         utulek_nazev = form.utulek_nazev.data
 
-        fotografie = None
+        fotografie_file = form.fotografie.data
 
         # Handle image upload
-        if 'fotografie' in request.files:
-            file = request.files['fotografie']
-            if file.filename != '':
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                fotografie = filename
+        if form.fotografie.data:
+            fotografie_file = save_picture(form.fotografie.data)
+        else:
+            fotografie_file = None
 
         new_pes = Pes(ockovani=ockovani, jmeno=jmeno, rasa=rasa, vek=vek,
                       velikost=velikost, stav=stav, pohlavi=pohlavi,
-                      popis=popis, utulek_nazev=utulek_nazev, fotografie=fotografie)
+                      popis=popis, utulek_nazev=utulek_nazev, fotografie=fotografie_file)
 
         db.session.add(new_pes)
         db.session.commit()
@@ -104,9 +115,15 @@ def edit_pes(id):
         if 'fotografie' in request.files:
             file = request.files['fotografie']
             if file.filename != '':
+                # Delete the existing image if it exists
+                if pes_to_edit.fotografie:
+                    existing_image_path = os.path.join(app.root_path, 'static/img', pes_to_edit.fotografie)
+                    if os.path.exists(existing_image_path):
+                        os.remove(existing_image_path)
+                    
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-                pes_to_edit.fotografie = filename  # Corrected line
+                file.save(os.path.join(app.root_path, 'static/img', filename))
+                pes_to_edit.fotografie = filename
 
     if request.method == 'POST':
         pes_to_edit.ockovani = request.form['ockovani']

@@ -29,9 +29,14 @@
                     <td>{{ pes.rasa }}</td>
                     <td>{{ pes.vek }}</td>
                     <td>{{ pes.utulek_nazev }}</td>
+                    <td>
                     {% if pes.fotografie %}
-                    <img src="{{ url_for('static', filename='uploads/' + pes.fotografie) }}" alt="Dog Image">
-                    {% endif %}
+                    <div class="rounded-circle">
+                        <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}" alt="Dog Picture" style="width: 200px; height: 200px; object-fit: cover">
+                    </div>
+                     {% endif %}   
+                    </td>
+
                     <td>
                         <!-- Delete button form -->
                         <form method="post" action="{{ url_for('delete_pes', id=pes.idpes) }}" style="display: inline;">
