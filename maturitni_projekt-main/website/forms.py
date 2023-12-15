@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, FileField, TextAreaField, validators, SubmitField
 from wtforms.validators import ValidationError, Length
 from flask_wtf.file import FileAllowed, FileField
+from website.models import Utulek
 
 class AddPesForm(FlaskForm):
     ockovani = SelectField('Očkování', choices=[('Ano', 'Ano'), ('Ne', 'Ne')], validators=[validators.InputRequired()])
@@ -26,7 +27,8 @@ class AddPesForm(FlaskForm):
 
     pohlavi = SelectField('Pohlaví', choices=[('Pes', 'Pes'), ('Fena', 'Fena')], validators=[validators.InputRequired()])
     popis = TextAreaField('Popis', validators=[validators.InputRequired()])
-    utulek_nazev = StringField('Název útulku', validators=[validators.InputRequired()])
+    utulek_choices = [(utulek.nazev, utulek.nazev) for utulek in Utulek.query.all()]
+    utulek_nazev = SelectField('Název útulku', choices=utulek_choices, validators=[validators.InputRequired()])
     fotografie = FileField('Fotografie', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField(label=('Přidat'))
 

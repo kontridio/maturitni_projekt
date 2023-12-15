@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+    {% include 'navbar.html' %}
     <div class="container">
         <h1>Edit Pes</h1>
         <form method="post" action="{{ url_for('edit_pes', id=pes.idpes) }}" enctype="multipart/form-data">
@@ -81,8 +82,12 @@
                         <td><textarea class="form-control" name="popis" rows="4">{{ pes.popis }}</textarea></td>
                     </tr>
                     <tr>
-                        <td><label for="utulek_nazev">Název útulku:</label></td>
-                        <td><input class="form-control" type="text" name="utulek_nazev" value="{{ pes.utulek_nazev }}" required></td>
+                        <td><label for="utulek_nazev">Název útulku</label></td>
+                        <td><select class="form-control" id="utulek_nazev" name="utulek_nazev">
+                            {% for utulek in utulky_entries %}
+                                <option value="{{ utulek.nazev }}" {% if pes.utulek_nazev == utulek.nazev %}selected{% endif %}>{{ utulek.nazev }}</option>
+                            {% endfor %}
+                        </select></td>
                     </tr>
                     <tr>
                         <td><label for="fotografie">Fotografie:</label></td>

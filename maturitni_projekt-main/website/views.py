@@ -105,6 +105,7 @@ def delete_pes(id):
 @app.route('/pes/edit/<int:id>', methods=['GET', 'POST'])
 def edit_pes(id):
     pes_to_edit = Pes.query.get(id)
+    utulky_entries = Utulek.query.all()
 
     if not pes_to_edit:
         flash('Pes nebyl nalezen.', 'danger')
@@ -140,5 +141,5 @@ def edit_pes(id):
         flash('Pes byl aktualizován.', 'success')
         return redirect(url_for('show_pes'))
 
-    return render_template('edit_pes.html', pes=pes_to_edit)
+    return render_template('edit_pes.html', pes=pes_to_edit, utulky_entries=utulky_entries)
 # Add more routes as needed

@@ -1,4 +1,5 @@
 from sqlalchemy import CheckConstraint
+from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from website import db
 
@@ -32,7 +33,8 @@ class Pes(db.Model):
     pohlavi = db.Column(db.Enum('Pes', 'Fena', name='pohlavi_enum'), nullable=True)
     popis = db.Column(db.String(200))
     fotografie = db.Column(db.String(100), nullable=False, default='default.jpeg') 
-    utulek_nazev = db.Column(db.String(45), nullable=False)
+    utulek_nazev = db.Column(db.String(45), db.ForeignKey('utulek.nazev'), nullable=False)
+    utulek = db.relationship('Utulek', backref=db.backref('pes', lazy=True))
 
     __table_args__ = (
         CheckConstraint('ockovani IN ("Ano", "Ne")'),
