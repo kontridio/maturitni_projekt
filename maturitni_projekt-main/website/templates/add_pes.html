@@ -1,41 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Pes</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
+
 <body>
     {% include 'navbar.html' %}
-    <h1>Add Pes</h1>
-    <form method="post" enctype="multipart/form-data">
-        {{ form.csrf_token }}
-        {{ form.hidden_tag() }}
-        {{ form.ockovani.label }} {{ form.ockovani }}
-        {{ form.jmeno.label }} {{ form.jmeno }}
-        {{ form.rasa.label }} {{ form.rasa }}
-        {{ form.vek.label }} {{ form.vek }}
-        {{ form.velikost.label }} {{ form.velikost }}
-        {{ form.stav.label }} {{ form.stav }}
-        {{ form.pohlavi.label }} {{ form.pohlavi }}
-        {{ form.popis.label }} {{ form.popis }}
-        {{ form.utulek_nazev.label }} {{ form.utulek_nazev }}
-        {{ form.fotografie.label() }} {{ form.fotografie }}
-        {{ form.submit() }}
-    </form>
-    {% if form.jmeno.errors %}
-        <div class="invalid-feedback">
-            {% for error in form.jmeno.errors %}
+    <div class="container mt-4">
+        <h1>Add Pes</h1>
+        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {{ form.csrf_token }}
+            {{ form.hidden_tag() }}
+            {{ form.ockovani.label }} {{ form.ockovani }}
+            {{ form.jmeno.label }} {{ form.jmeno(class="form-control", placeholder="Enter jmeno", required="required")}}
+            {% if form.jmeno.errors %}
+            <div class="">
+                {% for error in form.jmeno.errors %}
                 <span>{{ error }}</span>
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% if form.rasa.errors %}
-    <div class="invalid-feedback">
-        {% for error in form.rasa.errors %}
-            <span>{{ error }}</span>
-        {% endfor %}
+                {% endfor %}
+            </div>
+            {% else %}
+            {% endif %}
+            {{ form.rasa.label }} {{ form.rasa(class="form-control", placeholder="Enter rasa", required="required") }}
+            {% if form.rasa.errors %}
+            <div class="">
+                {% for error in form.rasa.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {% endif %}
+            {{ form.vek.label }} {{ form.vek }}
+            {{ form.velikost.label }} {{ form.velikost }}
+            {{ form.stav.label }} {{ form.stav }}
+            {{ form.pohlavi.label }} {{ form.pohlavi }}
+            {{ form.popis.label }} {{ form.popis }}
+            {{ form.utulek_nazev.label }} {{ form.utulek_nazev }}
+            {{ form.fotografie.label() }} {{ form.fotografie }}
+            {{ form.submit() }}
+        </form>
+
     </div>
-{% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

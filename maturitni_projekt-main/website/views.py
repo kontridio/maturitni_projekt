@@ -106,6 +106,7 @@ def delete_pes(id):
 def edit_pes(id):
     pes_to_edit = Pes.query.get(id)
     utulky_entries = Utulek.query.all()
+    form = AddPesForm()
 
     if not pes_to_edit:
         flash('Pes nebyl nalezen.', 'danger')
@@ -126,7 +127,7 @@ def edit_pes(id):
                 file.save(os.path.join(app.root_path, 'static/img', filename))
                 pes_to_edit.fotografie = filename
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate_on_submit():
         pes_to_edit.ockovani = request.form['ockovani']
         pes_to_edit.jmeno = request.form['jmeno']
         pes_to_edit.rasa = request.form['rasa']
@@ -141,5 +142,5 @@ def edit_pes(id):
         flash('Pes byl aktualizován.', 'success')
         return redirect(url_for('show_pes'))
 
-    return render_template('edit_pes.html', pes=pes_to_edit, utulky_entries=utulky_entries)
+    return render_template('edit_pes.html', pes=pes_to_edit, utulky_entries=utulky_entries, form=form)
 # Add more routes as needed
