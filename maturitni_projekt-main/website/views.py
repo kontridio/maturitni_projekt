@@ -3,7 +3,7 @@ import os
 import secrets
 from PIL import Image
 from website import app, db
-from website.forms import AddPesForm
+from website.forms import AddPesForm, EditPesForm
 from website.models import Mesto, Utulek, Pes
 from werkzeug.utils import secure_filename
 
@@ -24,7 +24,7 @@ posts = [
 
 @app.route('/')
 def home():
-    return render_template('home.html', posts=posts)  # You need to create this template
+    return render_template('home.html', posts=posts)
 
 @app.route('/mesta')
 def show_mesta():
@@ -69,7 +69,7 @@ def add_pes():
 
         fotografie_file = form.fotografie.data
 
-        # Handle image upload
+
         if form.fotografie.data:
             fotografie_file = save_picture(form.fotografie.data)
         else:
@@ -84,7 +84,7 @@ def add_pes():
 
         flash('Pes byl přidán.', 'success')
 
-        return redirect(url_for('show_pes'))  # Redirect to the page showing all dogs
+        return redirect(url_for('show_pes'))
     
     return render_template('add_pes.html', form = form)
 
@@ -106,41 +106,16 @@ def delete_pes(id):
 def edit_pes(id):
     pes_to_edit = Pes.query.get(id)
     utulky_entries = Utulek.query.all()
-    form = AddPesForm()
+    form = EditPesForm(obj=pes_to_edit)
 
     if not pes_to_edit:
         flash('Pes nebyl nalezen.', 'danger')
         return redirect(url_for('show_pes'))
-    
-    if request.method == 'POST':
-        # Handle image upload
-        if 'fotografie' in request.files:
-            file = request.files['fotografie']
-            if file.filename != '':
-                # Delete the existing image if it exists
-                if pes_to_edit.fotografie:
-                    existing_image_path = os.path.join(app.root_path, 'static/img', pes_to_edit.fotografie)
-                    if os.path.exists(existing_image_path):
-                        os.remove(existing_image_path)
-                    
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.root_path, 'static/img', filename))
-                pes_to_edit.fotografie = filename
 
     if request.method == 'POST' and form.validate_on_submit():
-        pes_to_edit.ockovani = request.form['ockovani']
-        pes_to_edit.jmeno = request.form['jmeno']
-        pes_to_edit.rasa = request.form['rasa']
-        pes_to_edit.vek = request.form['vek']
-        pes_to_edit.velikost = request.form['velikost']
-        pes_to_edit.stav = request.form.get('stav')
-        pes_to_edit.pohlavi = request.form['pohlavi']
-        pes_to_edit.popis = request.form['popis']
-        pes_to_edit.utulek_nazev = request.form['utulek_nazev']
-
+        form.populate_obj(pes_to_edit)
         db.session.commit()
         flash('Pes byl aktualizován.', 'success')
         return redirect(url_for('show_pes'))
 
     return render_template('edit_pes.html', pes=pes_to_edit, utulky_entries=utulky_entries, form=form)
-# Add more routes as needed
