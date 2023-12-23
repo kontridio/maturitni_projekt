@@ -1,9 +1,10 @@
 from flask import render_template, request, redirect, url_for, flash, current_app, request
+from sqlalchemy import or_
 import os
 import secrets
 from PIL import Image
 from website import app, db
-from website.forms import AddPesForm, EditPesForm
+from website.forms import AddPesForm, EditPesForm, FilterForm
 from website.models import Mesto, Utulek, Pes
 from werkzeug.utils import secure_filename
 
@@ -36,10 +37,53 @@ def show_utulky():
     utulky_entries = Utulek.query.all()
     return render_template('utulky.html', utulky_entries=utulky_entries)
 
-@app.route('/pes')
+@app.route('/pes', methods=['GET', 'POST'])
 def show_pes():
-    pes_entries = Pes.query.all()
-    return render_template('pes.html', pes_entries=pes_entries)
+    search_term = request.args.get('search', '')
+    form = FilterForm()
+
+    utulek_choices = [(utulek.nazev, utulek.nazev) for utulek in Utulek.query.all()]
+    utulek_choices.insert(0, ('', 'All'))
+    form.utulek_nazev.choices = utulek_choices
+
+    if 'clear_filters' in request.args:
+        return redirect(url_for('show_pes'))
+
+    base_query = Pes.query.filter(
+        or_(Pes.jmeno.ilike(f"%{search_term}%"), Pes.rasa.ilike(f"%{search_term}%"), Pes.utulek_nazev.ilike(f"%{search_term}%"),
+            Pes.ockovani.ilike(f"%{search_term}%"), Pes.stav.ilike(f"%{search_term}%"), Pes.pohlavi.ilike(f"%{search_term}%"),
+            Pes.velikost.ilike(f"%{search_term}%"),)
+    )
+    
+    if form.validate_on_submit() or request.method == 'POST':
+        vek_filter = form.vek.data
+        velikost_filter = form.velikost.data
+        utulek_filter = form.utulek_nazev.data
+        ockovani_filter = form.ockovani.data
+        pohlavi_filter = form.pohlavi.data
+        stav_filter = form.stav.data
+
+        if vek_filter:
+            base_query = base_query.filter_by(vek=vek_filter)
+
+        if velikost_filter:
+            base_query = base_query.filter_by(velikost=velikost_filter)
+
+        if utulek_filter and utulek_filter != '':
+            base_query = base_query.filter_by(utulek_nazev=utulek_filter)
+
+        if ockovani_filter:
+            base_query = base_query.filter_by(ockovani=ockovani_filter)
+
+        if pohlavi_filter:
+            base_query = base_query.filter_by(pohlavi=pohlavi_filter)
+
+        if stav_filter:
+            base_query = base_query.filter_by(stav=stav_filter)
+
+    pes_entries = base_query.all()
+    
+    return render_template('pes.html', pes_entries=pes_entries, form=form)
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)

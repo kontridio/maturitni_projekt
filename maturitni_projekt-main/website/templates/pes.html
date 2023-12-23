@@ -12,7 +12,24 @@
 <body>
     {% include 'navbar.html' %}
     <div class="container mt-4">
-        
+        <form method="GET" action="{{ url_for('show_pes') }}" class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search"
+                value="{{ request.args.get('search', '') }}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            {{ form.vek.label }} {{ form.vek }}
+            {{ form.velikost.label }} {{ form.velikost }}
+            {{ form.pohlavi.label }} {{ form.pohlavi }}
+            {{ form.ockovani.label }} {{ form.ockovani }}
+            {{ form.stav.label }} {{ form.stav }}
+            {{ form.utulek_nazev.label }} {{ form.utulek_nazev }}
+            {{ form.submit() }}
+            <a href="{{ url_for('show_pes') }}" class="btn btn-secondary my-2 my-sm-0 ml-2">Clear Filters</a>
+        </form>
+
         <h1>Seznam psů</h1>
         <table class="table">
             <thead>
@@ -23,6 +40,7 @@
                     <th>Útulek</th>
                     <th>Úpravy</th>
                 </tr>
+
             </thead>
             <tbody>
                 {% for pes in pes_entries %}
@@ -30,13 +48,15 @@
                     <td>{{ pes.jmeno }}</td>
                     <td>{{ pes.rasa }}</td>
                     <td>{{ pes.vek }}</td>
+                    <td>{{ pes.velikost }}</td>
                     <td>{{ pes.utulek_nazev }}</td>
                     <td>
-                    {% if pes.fotografie %}
-                    <div class="rounded-circle">
-                        <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}" alt="Dog Picture" style="width: 200px; height: 200px; object-fit: cover">
-                    </div>
-                     {% endif %}   
+                        {% if pes.fotografie %}
+                        <div class="rounded-circle">
+                            <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}" alt="Dog Picture"
+                                style="width: 200px; height: 200px; object-fit: cover">
+                        </div>
+                        {% endif %}
                     </td>
 
                     <td>

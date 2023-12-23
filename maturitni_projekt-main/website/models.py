@@ -1,7 +1,18 @@
 from sqlalchemy import CheckConstraint
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from website import db
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    date_joined = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
 
 
 class Mesto(db.Model):
@@ -33,7 +44,7 @@ class Pes(db.Model):
     pohlavi = db.Column(db.Enum('Pes', 'Fena', name='pohlavi_enum'), nullable=True)
     popis = db.Column(db.String(200))
     fotografie = db.Column(db.String(100), nullable=False, default='default.jpeg') 
-    utulek_nazev = db.Column(db.String(45), db.ForeignKey('utulek.nazev'), nullable=False)
+    utulek_nazev = db.Column(db.String(45), db.ForeignKey('utulek.nazev', name='utulek_nazev'), nullable=False)
     utulek = db.relationship('Utulek', backref=db.backref('pes', lazy=True))
 
     __table_args__ = (

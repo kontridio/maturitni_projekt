@@ -77,3 +77,14 @@ class EditPesForm(FlaskForm):
         for char in jmeno.data:
             if char in excluded_chars:
                 raise ValidationError(f'Znak "{char}" nemůže být použit při zadávání jména.')
+            
+
+class FilterForm(FlaskForm):
+    pohlavi = SelectField('Pohlaví', choices=[('', 'Any'),('Pes', 'Pes'), ('Fena', 'Fena')])
+    vek = SelectField('Věk', choices=[('', 'Any'),('2 - 6 měs', '2 - 6 měs'),('6 měs - 2 roky', '6 měs - 2 roky'),('2 - 8 let', '2 - 8 let'),('8 a více', '8 a více')])
+    velikost = SelectField('Velikost', choices=[('', 'Any'),('maly', 'Malý'),('stredni', 'Střední'),('velky', 'Velký')])
+    ockovani = SelectField('Očkování', choices=[('', 'Any'),('Ano', 'Ano'), ('Ne', 'Ne')])
+    stav = SelectField('Stav', choices=[('', 'Any'),('kastrovany', 'Kastrovaný'),('handicapovany', 'Handicapovaný'),('akutni adoptce', 'Akutní adopce')])
+    utulek_nazev = SelectField('Název útulku', choices=[], coerce=str)
+
+    submit = SubmitField('Apply Filters')
