@@ -4,7 +4,7 @@ import os
 import secrets
 from PIL import Image
 from website import app, db
-from website.forms import AddPesForm, EditPesForm, FilterForm
+from website.forms import AddPesForm, EditPesForm, FilterForm, MestoAddForm, UtulekAddForm
 from website.models import Mesto, Utulek, Pes
 from werkzeug.utils import secure_filename
 
@@ -30,12 +30,125 @@ def home():
 @app.route('/mesta')
 def show_mesta():
     mesta_entries = Mesto.query.all()
-    return render_template('mesta.html', mesta_entries=mesta_entries)
+    form = MestoAddForm()
+
+    if form.validate_on_submit():
+        new_mesto = Mesto(
+            nazev=form.nazev.data,
+            kraj=form.kraj.data,
+            psc=form.psc.data
+        )
+
+        db.session.add(new_mesto)
+        db.session.commit()
+
+        flash('Mesto was added successfully.', 'success')
+    return render_template('mesta.html', mesta_entries=mesta_entries, form=form)
+
+@app.route('/mesta/add', methods=['GET', 'POST'])
+def add_mesto():
+    form = MestoAddForm()
+
+    if form.validate_on_submit():
+        new_mesto = Mesto(
+            nazev=form.nazev.data,
+            kraj=form.kraj.data,
+            psc=form.psc.data
+        )
+
+        db.session.add(new_mesto)
+        db.session.commit()
+
+        flash('Mesto was added successfully.', 'success')
+        return redirect(url_for('show_mesta'))
+
+    return render_template('add_mesto.html', form=form)
+
+@app.route('/mesta/edit/<string:nazev>', methods=['GET', 'POST'])
+def edit_mesto(nazev):
+    mesto_to_edit = Mesto.query.get(nazev)
+    form = MestoAddForm(obj=mesto_to_edit)
+
+    if not mesto_to_edit:
+        flash('Město nebylo nalezeno.', 'danger')
+        return redirect(url_for('show_mesta'))
+
+    if request.method == 'POST' and form.validate_on_submit():
+        form.populate_obj(mesto_to_edit)
+        db.session.commit()
+        flash('Město bylo aktualizováno.', 'success')
+        return redirect(url_for('show_mesta'))
+
+    return render_template('edit_mesto.html', mesto=mesto_to_edit, form=form)
+
+@app.route('/mesta/delete/<string:nazev>', methods=['GET', 'POST'])
+def delete_mesto(nazev):
+    mesto_to_delete = Mesto.query.get(nazev)
+
+    if mesto_to_delete:
+        db.session.delete(mesto_to_delete)
+        db.session.commit()
+        flash('Pes byl odstraněn.', 'success')
+    else:
+        flash('Pes nebyl nalezen.', 'danger')
+
+    return redirect(url_for('show_mesta'))
 
 @app.route('/utulky')
 def show_utulky():
     utulky_entries = Utulek.query.all()
     return render_template('utulky.html', utulky_entries=utulky_entries)
+
+@app.route('/utulky/add', methods=['GET', 'POST'])
+def add_utulek():
+    form = UtulekAddForm()
+
+    if form.validate_on_submit():
+        new_utulek = Utulek(
+            nazev=form.nazev.data,
+            adresa=form.adresa.data,
+            mesto_nazev=form.mesto_nazev.data
+            # Add other fields as needed...
+        )
+
+        db.session.add(new_utulek)
+        db.session.commit()
+
+        flash('Utulek byl přidán.', 'success')
+        return redirect(url_for('show_utulky'))
+
+    return render_template('add_utulek.html', form=form)
+
+@app.route('/utulky/edit/<string:nazev>', methods=['GET', 'POST'])
+def edit_utulek(nazev):
+    utulek_to_edit = Utulek.query.get(nazev)
+    form = UtulekAddForm(obj=utulek_to_edit)
+
+    if not utulek_to_edit:
+        flash('Útulek nebyl nalezen.', 'danger')
+        return redirect(url_for('show_utulky'))
+
+    if request.method == 'POST' and form.validate_on_submit():
+        form.populate_obj(utulek_to_edit)
+        db.session.commit()
+        flash('Útulek byl aktualizován.', 'success')
+        return redirect(url_for('show_utulky'))
+    
+    return render_template('edit_utulek.html', utulek=utulek_to_edit, form=form)
+
+
+@app.route('/utulky/delete/<string:nazev>', methods=['GET', 'POST'])
+def delete_utulek(nazev):
+    utulek_to_delete = Utulek.query.get(nazev)
+
+    if utulek_to_delete:
+        db.session.delete(utulek_to_delete)
+        db.session.commit()
+        flash('Pes byl odstraněn.', 'success')
+    else:
+        flash('Pes nebyl nalezen.', 'danger')
+
+    return redirect(url_for('show_utulky'))
 
 @app.route('/pes', methods=['GET', 'POST'])
 def show_pes():

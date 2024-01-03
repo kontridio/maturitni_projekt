@@ -1,16 +1,55 @@
+<!-- templates/mesta.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesta</title>
+    <title>Seznam měst</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
-    <h1>List of Mesta</h1>
-    <ul>
-        {% for mesto in mesta_entries %}
+    {% include 'navbar.html' %}
+    <div class="container mt-4">
+        <form method="GET" action="{{ url_for('show_mesta') }}" class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search"
+                value="{{ request.args.get('search', '') }}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <h1>Seznam měst</h1>
+        <ul>
+            <td>
+                <form method="POST" action="{{ url_for('add_mesto') }}">
+                    {{ form.csrf_token }}
+                    {{ form.nazev.label }} {{ form.nazev }}
+                    {{ form.kraj.label }} {{ form.kraj }}
+                    {{ form.psc.label }} {{ form.psc }}
+                    {{ form.submit() }}
+                </form>
+            </td>
+            {% for mesto in mesta_entries %}
+
             <li>{{ mesto.nazev }} - {{ mesto.kraj }} - {{ mesto.psc }}</li>
-        {% endfor %}
-    </ul>
+            <td>
+                <!-- Delete button form -->
+                <form method="post" action="{{ url_for('delete_mesto', nazev=mesto.nazev) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+                <!-- Edit button link -->
+                <a href="{{ url_for('edit_mesto', nazev=mesto.nazev) }}" class="btn btn-warning btn-sm ml-2">Edit</a>
+            </td>
+            </tr>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

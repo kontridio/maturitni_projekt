@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, FileField, TextAreaField, validators, SubmitField
+from wtforms import StringField, SelectField, FileField, TextAreaField, validators, SubmitField, IntegerField
 from wtforms.validators import ValidationError, Length
 from flask_wtf.file import FileAllowed, FileField
-from website.models import Utulek
+from website.models import Utulek, Mesto
 
 class AddPesForm(FlaskForm):
     ockovani = SelectField('Očkování', choices=[('Ano', 'Ano'), ('Ne', 'Ne')], validators=[validators.InputRequired()])
@@ -88,3 +88,44 @@ class FilterForm(FlaskForm):
     utulek_nazev = SelectField('Název útulku', choices=[], coerce=str)
 
     submit = SubmitField('Apply Filters')
+
+
+class MestoAddForm(FlaskForm):
+    nazev = StringField('Název', validators=[validators.InputRequired()])
+    kraj = StringField('Kraj', validators=[validators.InputRequired()])
+    psc = IntegerField('PSČ', validators=[validators.InputRequired()])
+    submit = SubmitField('Přidat Mesto')
+
+            
+    def validate_kraj(self, kraj):
+        excluded_chars = "*?!'^+%&/()=}][{$#_.,012356789"
+        for char in kraj.data:
+            if char in excluded_chars:
+                raise ValidationError(f'Znak "{char}" nemůže být použit při zadávání jména.')
+            
+    def validate_nazev(self, nazev):
+        excluded_chars = "*?!'^+%&/()=}][{$#_.,012356789"
+        for char in nazev.data:
+            if char in excluded_chars:
+                raise ValidationError(f'Znak "{char}" nemůže být použit při zadávání jména.')
+            
+
+class UtulekAddForm(FlaskForm):
+    nazev = StringField('Název', validators=[validators.InputRequired()])
+    adresa = StringField('Kraj', validators=[validators.InputRequired()])
+    mesto_choices = [(mesto.nazev, mesto.nazev) for mesto in Mesto.query.all()]
+    mesto_nazev = SelectField('Město', choices=mesto_choices, validators=[validators.InputRequired()])
+    submit = SubmitField('Přidat')
+
+            
+    def validate_adresa(self, adresa):
+        excluded_chars = "*?!'^+%&/()=}][{$#_."
+        for char in adresa.data:
+            if char in excluded_chars:
+                raise ValidationError(f'Znak "{char}" nemůže být použit při zadávání jména.')
+            
+    def validate_nazev(self, nazev):
+        excluded_chars = "*?!'^+%&/()=}][{$#_."
+        for char in nazev.data:
+            if char in excluded_chars:
+                raise ValidationError(f'Znak "{char}" nemůže být použit při zadávání jména.')
