@@ -1,0 +1,53 @@
+<!-- templates/pes_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pes.jmeno }} Detail</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<style>
+    .card-img-top {
+        width: 50%;
+        object-fit: cover;
+    }
+</style>
+
+<body class="bg-secondary">
+    <div class="jumbotron-fluid bg-dark">
+        <h1 class="text-white text-center">Utulek</h1>
+        {% include 'navbar.html' %}
+    </div>
+    <div class="container bg-dark mt-5 p-5 mb-5">
+        <h1 class="text-light text-center ">{{ pes.jmeno }}</h1>
+        <div class="m-5 ">
+            {% if pes.fotografie %}
+            <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}" class="card-img-top "
+                alt="Dog Picture">
+            {% endif %}
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">Rasa: {{ pes.rasa }}</p>
+                <p class="card-text">Věk: {{ pes.vek }}</p>
+                <p class="card-text">Popis: {{ pes.popis }}</p>
+            </div>
+        </div>
+        {% for utulek in utulek_entries %}
+        <li class="text-light mt-5">{{ utulek.nazev }}</li>
+        <!-- Include other relevant pes details -->
+        {% endfor %}
+    </div>
+
+    {% include 'footer.html' %}
+    <!-- Add Bootstrap JS and Popper.js scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ utulek.nazev }} Detail</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+    function initMap() {
+        // Replace 'YOUR_UTULEK_ADDRESS' with the actual address from your Utulek model
+        var utulekAddress = "{{ utulek.adresa }}";
+
+        // Use the function to get latitude and longitude
+        getLatLonFromAddress(utulekAddress, function (utulekLocation) {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: utulekLocation
+            });
+
+            var marker = new google.maps.Marker({
+                position: utulekLocation,
+                map: map,
+                title: "{{ utulek.nazev }} Location"
+            });
+        });
+    }
+
+    // Function to fetch latitude and longitude using the provided address
+    function getLatLonFromAddress(address, callback) {
+        // Make an AJAX request to your Flask route to get coordinates
+        $.ajax({
+            url: "/get_lat_lon",
+            type: "GET",
+            data: { address: address },
+            success: function (response) {
+                var lat = response.lat;
+                var lon = response.lon;
+                callback({ lat: lat, lon: lon });
+            },
+            error: function (error) {
+                console.error("Error fetching coordinates:", error);
+            }
+        });
+    }
+</script>
+
+<style>
+    .card-img-top {
+        width: 50%;
+        object-fit: cover;
+    }
+</style>
+
+<body class="bg-secondary">
+    <div class="jumbotron-fluid bg-dark">
+        <h1 class="text-white text-center">Utulek</h1>
+        {% include 'navbar.html' %}
+    </div>
+    <div class="container bg-dark mt-5 p-5">
+        <h1 class="text-light text-center ">{{ utulek.nazev }}</h1>
+        <div class="m-5 ">
+            <!-- Include logic for displaying utulek images -->
+            {% if utulek.fotografie %}
+            <img src="{{ url_for('static', filename='img/' + utulek.fotografie) }}" class="card-img-top"
+                alt="Utulek Picture">
+            {% endif %}
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">Adresa: {{ utulek.adresa }}</p>
+                <!-- Include other relevant utulek details -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container bg-dark mt-5 mb-2 p-3 text-light">
+        <!-- Display information about the utulek -->
+        <h2 class="mt-5">Informations about the Utulek</h2>
+        <p>Utulek Name: {{ utulek.nazev }}</p>
+        <p>Adresa: {{ utulek.adresa }}</p>
+        <!-- Include other relevant utulek details -->
+        <h3 class="mt-4">Pesi in this Utulek:</h3>
+        <ul>
+            {% for pes in pes_entries %}
+            <li>{{ pes.jmeno }} - Rasa: {{ pes.rasa }} - Věk: {{ pes.vek }}</li>
+            <!-- Include other relevant pes details -->
+            {% endfor %}
+        </ul>
+        <div id="map" style="height: 400px;"></div>
+    </div>
+
+    {% include 'footer.html' %}
+    <!-- Add Bootstrap JS and Popper.js scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+</body>
+
+</html>
