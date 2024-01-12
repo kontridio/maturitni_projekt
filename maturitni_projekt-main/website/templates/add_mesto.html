@@ -11,18 +11,42 @@
 </head>
 
 <body>
-    {% include 'navbar.html' %}
+    <div class="jumbotron-fluid bg-dark pt-5">
+        <h1 class="text-white text-center">Psinec</h1>
+        {% include 'navbar.html' %}
+    </div>
     <div class="container">
-        <h1>Add Mesto</h1>
+        <h1>Přidat Město</h1>
         <form method="POST" action="{{ url_for('add_mesto') }}">
             {{ form.csrf_token }}
-            {{ form.nazev.label }} {{ form.nazev }}
-            {{ form.kraj.label }} {{ form.kraj }}
+            <div class="form-group">
+                <label for="nazev"></label>
+                {{ form.nazev.label }} {{ form.nazev(class="form-control", required="required") }}
+                {% if form.nazev.errors %}
+                <div class="">
+                    {% for error in form.nazev.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="kraj"></label>
+                {{ form.kraj.label }} {{ form.kraj(class="form-control", required="required") }}
+                {% if form.kraj.errors %}
+                <div class="">
+                    {% for error in form.kraj.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
             {{ form.psc.label }} {{ form.psc }}
             {{ form.submit() }}
         </form>
     </div>
-
+    {% include 'footer.html' %}
     <!-- Add Bootstrap JS and Popper.js scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

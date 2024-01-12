@@ -18,13 +18,13 @@
 </style>
 
 <body class="bg-secondary">
-    <div class="jumbotron-fluid bg-dark">
-        <h1 class="text-white text-center">Utulek</h1>
+    <div class="jumbotron-fluid bg-dark pt-5">
+        <h1 class="text-white text-center">Psinec</h1>
         {% include 'navbar.html' %}
     </div>
     <div class="container bg-dark mt-5 p-5 mb-5">
         <h1 class="text-light text-center ">{{ pes.jmeno }}</h1>
-        <div class="m-5 ">
+        <div class="m-5 text-center">
             {% if pes.fotografie %}
             <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}" class="card-img-top "
                 alt="Dog Picture">
@@ -37,10 +37,14 @@
                 <p class="card-text">Popis: {{ pes.popis }}</p>
             </div>
         </div>
-        {% for utulek in utulek_entries %}
-        <li class="text-light mt-5">{{ utulek.nazev }}</li>
-        <!-- Include other relevant pes details -->
-        {% endfor %}
+        <div class="text-light mt-5">
+            {% for utulek in utulek_entries %}
+            <h3>Z útulku:</h3>
+            <li>{{ utulek.nazev }}</li>
+            <!-- Include other relevant pes details -->
+            {% endfor %}
+        </div>
+
     </div>
 
     {% include 'footer.html' %}

@@ -1,31 +1,41 @@
-from flask import render_template, request, redirect, url_for, flash, current_app, request
+from flask import render_template, request, redirect, url_for, flash, request, abort, jsonify, Blueprint
+from flask_login import login_user, logout_user, current_user, login_required
+from functools import wraps
+from werkzeug.utils import secure_filename
 from sqlalchemy import or_
 import os
 import secrets
-from PIL import Image
 from website import app, db
-from website.forms import AddPesForm, EditPesForm, FilterForm, MestoAddForm, UtulekAddForm
-from website.models import Mesto, Utulek, Pes
-from werkzeug.utils import secure_filename
+from website.forms import AddPesForm, EditPesForm, FilterForm, MestoAddForm, UtulekAddForm, LoginForm, RegistrationForm
+from website.models import Mesto, Utulek, Pes, User
 
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
+
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def admin_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.role != 'A':
+            abort(403)  # Forbidden
+        return func(*args, **kwargs)
+    return decorated_view
+
 
 @app.route('/')
 def home():
-    return render_template('home.html', posts=posts)
+    return render_template('home.html')
+
+
+
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
 
 @app.route('/mesta')
 def show_mesta():
@@ -96,8 +106,22 @@ def delete_mesto(nazev):
 
 @app.route('/utulky')
 def show_utulky():
-    utulky_entries = Utulek.query.all()
-    return render_template('utulky.html', utulky_entries=utulky_entries)
+    search_term = request.args.get('search', '')
+    mesto_nazev_filter = request.args.get('mesto_nazev', '')
+
+    if 'clear_filters' in request.args:
+        return redirect(url_for('show_utulky'))
+
+    base_query = Utulek.query.filter(
+        or_(Utulek.nazev.ilike(f"%{search_term}%"), Utulek.mesto_nazev.ilike(f"%{search_term}%"))
+    )
+
+    if mesto_nazev_filter and mesto_nazev_filter != '':
+        base_query = base_query.filter_by(mesto_nazev=mesto_nazev_filter)
+
+    utulky_entries = base_query.all()
+
+    return render_template('utulky.html', utulky_entries=utulky_entries, search_term=search_term, mesto_nazev_filter=mesto_nazev_filter)
 
 @app.route('/utulky/add', methods=['GET', 'POST'])
 def add_utulek():
@@ -118,6 +142,16 @@ def add_utulek():
         return redirect(url_for('show_utulky'))
 
     return render_template('add_utulek.html', form=form)
+
+@app.route('/utulky/<string:utulek_nazev>')
+def utulek_detail(utulek_nazev):
+    utulek = Utulek.query.get(utulek_nazev)
+
+    pes_entries = Pes.query.filter(Pes.utulek_nazev == utulek.nazev).all()
+    if utulek is None:
+        abort(404)
+    return render_template('utulek_detail.html', utulek=utulek, pes_entries=pes_entries)
+
 
 @app.route('/utulky/edit/<string:nazev>', methods=['GET', 'POST'])
 def edit_utulek(nazev):
@@ -209,6 +243,17 @@ def save_picture(form_picture):
 
     return picture_fn
 
+@app.route('/pes/<int:pes_id>')
+def pes_detail(pes_id):
+    pes = Pes.query.get(pes_id)
+
+    utulek_entries = Utulek.query.filter(Utulek.nazev == pes.utulek_nazev).all()   
+    if pes is None:
+        abort(404)
+
+    return render_template('pes_detail.html', pes=pes, utulek_entries=utulek_entries)
+
+
 @app.route('/pes/add/', methods=['GET', 'POST'])
 def add_pes():
     form = AddPesForm()
@@ -271,6 +316,15 @@ def edit_pes(id):
 
     if request.method == 'POST' and form.validate_on_submit():
         form.populate_obj(pes_to_edit)
+
+        # Handle file upload
+        if 'fotografie' in request.files:
+            file = request.files['fotografie']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = save_picture(file)
+                pes_to_edit.fotografie = filename  # Update the database with the file name
+
         db.session.commit()
         flash('Pes byl aktualizován.', 'success')
         return redirect(url_for('show_pes'))

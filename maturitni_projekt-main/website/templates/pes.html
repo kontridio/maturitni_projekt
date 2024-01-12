@@ -1,3 +1,4 @@
+<!-- templates/pes.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,70 +9,113 @@
     <!-- Add Bootstrap CSS link -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+<style>
+    .card a {
+        color: rgb(0, 0, 0);
+    }
 
-<body>
-    {% include 'navbar.html' %}
-    <div class="container mt-4">
-        <form method="GET" action="{{ url_for('show_pes') }}" class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search"
-                value="{{ request.args.get('search', '') }}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+    .card-img-top {
+        width: 100%;
+        height: 15vw;
+        object-fit: cover;
+        object-position: center;
+    }
+</style>
 
-        <form method="POST" action="">
-            {{ form.csrf_token }}
-            {{ form.vek.label }} {{ form.vek }}
-            {{ form.velikost.label }} {{ form.velikost }}
-            {{ form.pohlavi.label }} {{ form.pohlavi }}
-            {{ form.ockovani.label }} {{ form.ockovani }}
-            {{ form.stav.label }} {{ form.stav }}
-            {{ form.utulek_nazev.label }} {{ form.utulek_nazev }}
-            {{ form.submit() }}
-            <a href="{{ url_for('show_pes') }}" class="btn btn-secondary my-2 my-sm-0 ml-2">Clear Filters</a>
-        </form>
-
-        <h1>Seznam psů</h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Jméno</th>
-                    <th>Rasa</th>
-                    <th>Věk</th>
-                    <th>Útulek</th>
-                    <th>Úpravy</th>
-                </tr>
-
-            </thead>
-            <tbody>
-                {% for pes in pes_entries %}
-                <tr>
-                    <td>{{ pes.jmeno }}</td>
-                    <td>{{ pes.rasa }}</td>
-                    <td>{{ pes.vek }}</td>
-                    <td>{{ pes.velikost }}</td>
-                    <td>{{ pes.utulek_nazev }}</td>
-                    <td>
-                        {% if pes.fotografie %}
-                        <div class="rounded-circle">
-                            <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}" alt="Dog Picture"
-                                style="width: 200px; height: 200px; object-fit: cover">
-                        </div>
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        <!-- Delete button form -->
-                        <form method="post" action="{{ url_for('delete_pes', id=pes.idpes) }}" style="display: inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                        <!-- Edit button link -->
-                        <a href="{{ url_for('edit_pes', id=pes.idpes) }}" class="btn btn-warning btn-sm ml-2">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<body class="bg-dark">
+    <div class="jumbotron-fluid bg-dark mt-5">
+        <h1 class="text-white text-center">Psinec</h1>
+        {% include 'navbar.html' %}
     </div>
+    <div class="container-fluid mr-5 bg-secondary">
+
+        <div class="row">
+            <!-- Filtering Sidebar -->
+
+            <div class="col-md-2 mt-5 fixed-center">
+                <div class="card bg-dark text-light p-4">
+                    <form method="POST" action="">
+                        {{ form.csrf_token }}
+                        <div class="mb-3">
+                            {{ form.vek.label(class="form-label") }}
+                            {{ form.vek(class="form-select float-end") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.velikost.label(class="form-label") }}
+                            {{ form.velikost(class="form-select float-end") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.pohlavi.label(class="form-label") }}
+                            {{ form.pohlavi(class="form-select float-end") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.ockovani.label(class="form-label") }}
+                            {{ form.ockovani(class="form-select float-end") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.stav.label(class="form-label") }}
+                            {{ form.stav(class="form-select float-end") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.utulek_nazev.label(class="form-label") }}
+                            {{ form.utulek_nazev(class="form-select float-end") }}
+                        </div>
+                        <button type="submit" class="btn btn-primary  mt-2">Apply Filters</button>
+                    </form>
+
+                    <a href="{{ url_for('show_pes') }}" class="btn btn-danger mt-2">Clear Filters</a>
+                </div>
+            </div>
+            <!-- Pes Entries -->
+            <div class="col-md-9">
+                <div class="row mt-5">
+                    <div class="col-md-10">
+                        <form method="GET" action="{{ url_for('show_pes') }}" class="form-inline mb-4">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search"
+                                value="{{ request.args.get('search', '') }}">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                    </div>
+                    <div class="ml-auto mr-3">
+                        <div class="btn btn-primary my-2 my-sm-1">
+                            <a class="nav-link text-light" href="/pes/add">Add Pes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <h1 class="">Seznam psů</h1>
+                <div class="row">
+                    {% for pes in pes_entries[::-1] %}
+                    <a href="{{ url_for('pes_detail', pes_id=pes.idpes) }}" class="card-link text-center">
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                {% if pes.fotografie %}
+                                <img src="{{ url_for('static', filename='img/' + pes.fotografie) }}"
+                                    class="card-img-top" alt="Dog Picture">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ pes.jmeno }}</h5>
+                                    <p class="card-text">Rasa: {{ pes.rasa }}</p>
+                                    <p class="card-text">Věk: {{ pes.vek }}</p>
+                                    <p class="card-text">Útulek: {{ pes.utulek_nazev }}</p>
+                                    <!-- Edit and Delete buttons -->
+                                    <form method="post" action="{{ url_for('delete_pes', id=pes.idpes) }}"
+                                        style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                    <a href="{{ url_for('edit_pes', id=pes.idpes) }}"
+                                        class="btn btn-warning btn-sm ml-2">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    {% include 'footer.html' %}
 
     <!-- Add Bootstrap JS and Popper.js scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

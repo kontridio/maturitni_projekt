@@ -1,40 +1,78 @@
-
-<!-- templates/utulky.html -->
+<!-- templates/utulek.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seznam útulků</title>
+    <title>Utulek</title>
     <!-- Add Bootstrap CSS link -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-<body>
-    {% include 'navbar.html' %}
-    <div class="container mt-4">
-        <form method="GET" action="{{ url_for('show_utulky') }}" class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search"
-                value="{{ request.args.get('search', '') }}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+<style>
+    .card a {
+        color: rgb(0, 0, 0);
+    }
+</style>
 
-        <h1>Seznam útulků</h1>
-        <ul>
-            {% for utulek in utulky_entries %}
-                <li>
-                    {{ utulek.nazev }} - {{ utulek.adresa }} - {{ utulek.mesto_nazev }}
-                    <!-- Delete button form -->
-                    <form method="post" action="{{ url_for('delete_utulek', nazev=utulek.nazev) }}" style="display: inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                    <!-- Edit button link -->
-                    <a href="{{ url_for('edit_utulek', nazev=utulek.nazev) }}" class="btn btn-warning btn-sm ml-2">Edit</a>
-                </li>
-            {% endfor %}
-        </ul>
+<body class="bg-dark">
+    <div class="jumbotron-fluid bg-dark mt-5">
+        <h1 class="text-white text-center">Psinec</h1>
+        {% include 'navbar.html' %}
     </div>
+    <div class="container-fluid mr-5 bg-secondary">
+
+
+        <div class="container row col-md-10 ml-auto">
+            <!-- Utulek Entries -->
+            <div class="col-md-9">
+
+                <h1 class="text-center mt-5">Seznam útulků</h1>
+                <div class="row mt-5 justify-content-center">
+
+                    <div class="col-md-12">
+                        <form method="GET" action="{{ url_for('show_utulky') }}"
+                            class="form-inline mb-4 justify-content-center">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search"
+                                value="{{ request.args.get('search', '') }}">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
+                            <div class="ml-auto">
+                                <div class="btn btn-primary my-2 my-sm-1">
+                                    <a class="nav-link text-light" href="/utulky/add">Add Utulek</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    {% for utulek in utulky_entries[::-1] %}
+                    <a href="{{ url_for('utulek_detail', utulek_nazev=utulek.nazev) }}" class="card-link">
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ utulek.nazev }}</h5>
+                                    <p class="card-text">Adresa: {{ utulek.adresa }}</p>
+                                    <p class="card-text">Město: {{ utulek.mesto_nazev }}</p>
+                                    <!-- Edit and Delete buttons -->
+                                    <form method="post" action="{{ url_for('delete_utulek', nazev=utulek.nazev) }}"
+                                        style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                    <a href="{{ url_for('edit_utulek', nazev=utulek.nazev) }}"
+                                        class="btn btn-warning btn-sm ml-2">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    {% include 'footer.html' %}
 
     <!-- Add Bootstrap JS and Popper.js scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

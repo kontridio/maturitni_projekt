@@ -10,19 +10,47 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-<body>
-    {% include 'navbar.html' %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="jumbotron-fluid bg-dark pt-5">
+        <h1 class="text-white text-center">Psinec</h1>
+        {% include 'navbar.html' %}
+    </div>
     <div class="container mt-4">
-        <h1>Edit Útulek</h1>
-        <form method="post" action="{{ url_for('edit_utulek', nazev=utulek.nazev) }}" {% if form.enctype %}enctype="{{ form.enctype }}"{% endif %}>
+        <h1>Upravit útulek</h1>
+        <form method="post" action="{{ url_for('edit_utulek', nazev=utulek.nazev) }}">
             {{ form.csrf_token }}
-            {{ form.nazev.label }} {{ form.nazev(class="form-control", required="required") }}
-            {{ form.adresa.label }} {{ form.adresa(class="form-control", required="required") }}
-            {{ form.mesto_nazev.label }} {{ form.mesto_nazev(class="form-control", required="required") }}
-            {{ form.submit() }}
+            <div class="form-group">
+                <label for="nazev">Nazev</label>
+                {{ form.nazev(class="form-control", placeholder="Enter nazev", required="required") }}
+                {% if form.nazev.errors %}
+                <div class="">
+                    {% for error in form.nazev.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="adresa"></label>
+                {{ form.adresa(class="form-control", placeholder="Enter adresa", required="required") }}
+                {% if form.adresa.errors %}
+                <div class="">
+                    {% for error in form.adresa.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.mesto_nazev.label }} {{ form.mesto_nazev(class="form-control", required="required") }}
+            </div>
+
+            <div class="form-group text-right">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
         </form>
     </div>
-
+    {% include 'footer.html' %}
     <!-- Add Bootstrap JS and Popper.js scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

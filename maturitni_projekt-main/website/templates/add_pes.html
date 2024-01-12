@@ -10,43 +10,19 @@
 </head>
 
 <body>
-    {% include 'navbar.html' %}
+    <div class="jumbotron-fluid bg-dark pt-5">
+        <h1 class="text-white text-center">Psinec</h1>
+        {% include 'navbar.html' %}
+    </div>
     <div class="container mt-4">
-        <h1>Add Pes</h1>
+        <h1>Přidat psa</h1>
+        {% import '/macros/fields.tmpl' as macros %}
         <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-            {{ form.csrf_token }}
-            {{ form.hidden_tag() }}
-            {{ form.ockovani.label }} {{ form.ockovani }}
-            {{ form.jmeno.label }} {{ form.jmeno(class="form-control", placeholder="Enter jmeno", required="required")}}
-            {% if form.jmeno.errors %}
-            <div class="">
-                {% for error in form.jmeno.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% else %}
-            {% endif %}
-            {{ form.rasa.label }} {{ form.rasa(class="form-control", placeholder="Enter rasa", required="required") }}
-            {% if form.rasa.errors %}
-            <div class="">
-                {% for error in form.rasa.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% else %}
-            {% endif %}
-            {{ form.vek.label }} {{ form.vek }}
-            {{ form.velikost.label }} {{ form.velikost }}
-            {{ form.stav.label }} {{ form.stav }}
-            {{ form.pohlavi.label }} {{ form.pohlavi }}
-            {{ form.popis.label }} {{ form.popis }}
-            {{ form.utulek_nazev.label }} {{ form.utulek_nazev }}
-            {{ form.fotografie.label() }} {{ form.fotografie }}
-            {{ form.submit() }}
+            {{ macros.render_form(form) }}
         </form>
 
     </div>
-
+    {% include 'footer.html' %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
-<body>
-    {% include 'navbar.html' %}
+<body class="d-flex flex-column min-vh-100">
+    <div class="jumbotron-fluid bg-dark pt-5">
+        <h1 class="text-white text-center">Psinec</h1>
+        {% include 'navbar.html' %}
+    </div>
     <div class="container">
-        <h1>Edit Mesto</h1>
+        <h1>Upravit Město</h1>
         <form method="post" action="{{ url_for('edit_mesto', nazev=mesto.nazev) }}">
             {{ form.csrf_token }}
             {{ form.hidden_tag() }}
@@ -21,7 +24,7 @@
                 <label for="nazev">Nazev</label>
                 {{ form.nazev(class="form-control", placeholder="Enter nazev", required="required") }}
                 {% if form.nazev.errors %}
-                <div class="invalid-feedback">
+                <div class="">
                     {% for error in form.nazev.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
@@ -33,7 +36,7 @@
                 <label for="kraj">Kraj</label>
                 {{ form.kraj(class="form-control", placeholder="Enter kraj", required="required") }}
                 {% if form.kraj.errors %}
-                <div class="invalid-feedback">
+                <div class="">
                     {% for error in form.kraj.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
@@ -45,7 +48,7 @@
                 <label for="psc">PSC</label>
                 {{ form.psc(class="form-control", placeholder="Enter psc", required="required") }}
                 {% if form.psc.errors %}
-                <div class="invalid-feedback">
+                <div class="">
                     {% for error in form.psc.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
@@ -53,10 +56,12 @@
                 {% endif %}
             </div>
 
-            {{ form.submit() }}
+            <div class="form-group text-right">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
         </form>
     </div>
-
+    {% include 'footer.html' %}
     <!-- Add Bootstrap JS and Popper.js scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

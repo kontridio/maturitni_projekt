@@ -1,0 +1,51 @@
+{% macro render_errors(errors) %}
+  {% if errors %}
+    <div class="">
+      {% for error in errors %}
+        <span>{{ error }}</span>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro render_form_group(label, field) %}
+  <div class="form-group">
+    {{ label }}
+    {{ field(class="form-control", required="required") }}
+    {{ render_errors(field.errors) }}
+  </div>
+{% endmacro %}
+
+{% macro render_select_group(label, field) %}
+  <div class="form-group">
+    {{ label }}
+    {{ field(class="form-control") }}
+    {{ render_errors(field.errors) }}
+  </div>
+{% endmacro %}
+
+{% macro render_form(form) %}
+  <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+
+    {{ render_form_group(form.jmeno.label, form.jmeno) }}
+    {{ render_form_group(form.rasa.label, form.rasa) }}
+
+    <fieldset>
+      {{ render_select_group(form.ockovani.label(class="control-label"), form.ockovani) }}
+      {{ render_select_group(form.vek.label(class="control-label"), form.vek) }}
+      {{ render_select_group(form.velikost.label(class="control-label"), form.velikost) }}
+      {{ render_select_group(form.stav.label(class="control-label"), form.stav) }}
+      {{ render_select_group(form.pohlavi.label(class="control-label"), form.pohlavi) }}
+      {{ render_form_group(form.popis.label(class="control-label"), form.popis) }}
+      {{ render_form_group(form.fotografie.label(class="control-label"), form.fotografie) }}
+    </fieldset>
+
+    {{ render_form_group(form.utulek_nazev.label(class="control-label"), form.utulek_nazev) }}
+
+    <div class="form-group text-right">
+      {{ form.submit(class="btn btn-primary") }}
+    </div>
+  </form>
+{% endmacro %}

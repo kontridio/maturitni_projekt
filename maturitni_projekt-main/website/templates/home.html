@@ -1,34 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Your Awesome Website</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add your custom CSS styles if needed -->
+    <style>
+        /* Add your custom styles here */
+        body {
+            background-color: #f8f9fa; /* Example background color */
+        }
 
+        .jumbotron {
+            background-color: #007bff; /* Example jumbotron background color */
+            color: #ffffff; /* Example jumbotron text color */
+        }
+    </style>
 </head>
+
 <body>
-
-    {% include 'navbar.html' %}
-
-<div class="container mt-3">
-    <h2>Featured Dogs</h2>
-    <div class="row">
-        {% for pes in featured_dogs %}
-            <div class="col-md-4 mb-3">
-                <div class="card">
-
-                    <div class="card-body">
-                        <h5 class="card-title">{{ pes.jmeno }}</h5>
-                        <p class="card-text">{{ pes.popis }}</p>
-                        <a href="{{ url_for('show_pes') }}" class="btn btn-primary">See Details</a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+    <div class="jumbotron-fluid bg-dark ">
+        <h1 class="text-white text-center">Utulek</h1>
+        {% include 'navbar.html' %}
     </div>
-</div>
+    <!-- Jumbotron Section -->
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Welcome to Your Awesome Website!</h1>
+        <p class="lead">Crafted with love just for you.</p>
+    </div>
 
+    <!-- Main Content Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Example Image -->
+                <img src="your-image.jpg" alt="Your Image" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <!-- Example Text -->
+                <h2>Your Heading</h2>
+                <p>Your awesome text goes here. Customize and make it uniquely yours!</p>
+                <!-- Add more content as needed -->
+            </div>
+        </div>
+    </div>
 
+    <!-- Footer Section -->
+    {% include 'footer.html' %}
+
+    <!-- Add Bootstrap JS and Popper.js scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
